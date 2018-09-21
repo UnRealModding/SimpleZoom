@@ -1,0 +1,16 @@
+[
+{
+  "modid": "simplezoom",
+  "name": "Simple Zoom",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["UnRealDinnerbone"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
