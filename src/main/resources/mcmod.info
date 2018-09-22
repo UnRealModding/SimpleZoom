@@ -2,10 +2,10 @@
 {
   "modid": "simplezoom",
   "name": "Simple Zoom",
-  "description": "",
+  "description": "A Simple Mod to zoom in",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://minecraft.curseforge.com/projects/simplezoom",
   "updateUrl": "",
   "authorList": ["UnRealDinnerbone"],
   "credits": "",
