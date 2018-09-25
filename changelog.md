@@ -1,3 +1,4 @@
-###Version 1.2.0
-* Changed Location of config file to local/client/simplezoom
-* Cleaned up code thanks LatvainModder 
+###Version 1.3.0
+* Added Config Option to toggle cinematic zoom while zooming #BlameChosen
+* Added Config Option for how fast zooming in done
+* Removed FOV Style Zoom, the slow zoom can now be done with the new zoomSpeed config

@@ -1,22 +1,27 @@
 buildscript {
 	repositories {
 		jcenter()
-        maven {
+		maven {
+			name = "forge"
 			url = "http://files.minecraftforge.net/maven"
 		}
-        maven {
-			url = "https://plugins.gradle.org/m2/"
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:+'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:+"
 	}
 }
 
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven'
 apply plugin: "com.matthewprenger.cursegradle"
-apply plugin: 'net.minecraftforge.gradle.forge'
 
 
 def buildVersion = "${mod_verison}"
