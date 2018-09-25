@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report A Buug
+about: Report A Bug
 
 ---
 
