@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
+@SuppressWarnings("WeakerAccess")
 @Mod.EventBusSubscriber
 @Mod(modid = SimpleZoom.MOD_ID, clientSideOnly = true, version = SimpleZoom.MOD_VERSION, name = SimpleZoom.MOD_NAME)
 public class SimpleZoom {
