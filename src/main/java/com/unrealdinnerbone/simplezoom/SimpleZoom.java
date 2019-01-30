@@ -5,7 +5,6 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.event.entity.living.ZombieEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
