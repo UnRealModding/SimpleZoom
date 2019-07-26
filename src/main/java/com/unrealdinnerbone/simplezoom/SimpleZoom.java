@@ -1,101 +1,68 @@
 package com.unrealdinnerbone.simplezoom;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraft.client.util.InputMappings;
+import net.minecraftforge.client.event.FOVUpdateEvent;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
 
-@SuppressWarnings("WeakerAccess")
+@Mod("simplezoom")
 @Mod.EventBusSubscriber
-@Mod(modid = SimpleZoom.MOD_ID, clientSideOnly = true, version = SimpleZoom.MOD_VERSION, name = SimpleZoom.MOD_NAME)
-public class SimpleZoom {
+public class SimpleZoom
+{
+    private static final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+    private static ForgeConfigSpec.IntValue zoomAmount;
+    private final KeyBinding BINDING;
+    private static SimpleZoom INSTANCE;
 
-    public static final String MOD_NAME = "Simple Zoom";
-    public static final String MOD_ID = "simplezoom";
-    public static final String MOD_VERSION = "@VERSION@";
 
-    private static KeyBinding zoomBind;
-    private static boolean isSmoothCameraOn = false;
-    private static float zoomCount = 0.0f;
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    public SimpleZoom() {
+        INSTANCE = this;
+        BINDING = new KeyBinding("Zoom", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_Z, "keygroup.simplezoom");
+        builder.push("client");
+        zoomAmount = builder.comment("Zoom Amount").defineInRange("zoomamount", 90, -180, 180);
+        MinecraftForge.EVENT_BUS.register(this);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, builder.build());
+
+    }
+
+    private void clientSetup(FMLClientSetupEvent clientSetupEvent) {
+        LOGGER.info("Loading Client....");
+        ClientRegistry.registerKeyBinding(BINDING);
+
+    }
+
+    private void setup(final FMLCommonSetupEvent event) {
+        LOGGER.info("Loading....");
+    }
+
+
+    public static SimpleZoom getInstance() {
+        return INSTANCE;
+    }
 
     @SubscribeEvent
-    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(MOD_ID)) {
-            ConfigManager.sync(MOD_ID, Config.Type.INSTANCE);
+    public static void onFovUpdate(FOVUpdateEvent event) {
+        if(SimpleZoom.getInstance().BINDING.isKeyDown()) {
+            event.setNewfov(event.getFov() - 90);
         }
-    }
-
-    @Mod.EventHandler
-    public static void onInit(FMLInitializationEvent initializationEvent) {
-        zoomBind = new KeyBinding("key.zoom.desc", Keyboard.KEY_C, "key.zoom.catg");
-        ClientRegistry.registerKeyBinding(zoomBind);
-    }
-
-    @SubscribeEvent
-    public static void onFOVModifierEvent(EntityViewRenderEvent.FOVModifier event) {
-        if (zoomBind.isKeyDown()) {
-            if (ZoomConfig.smoothCamera && !isSmoothCameraOn) {
-                setSmoothZoom(true);
-            }
-            if (ZoomConfig.doSlowZoom) {
-                if (zoomCount > ZoomConfig.zoomAmount) {
-                    zoomCount -= ZoomConfig.zoomSpeed;
-                    if (zoomCount < ZoomConfig.zoomAmount) {
-                        zoomCount = ZoomConfig.zoomAmount;
-                    }
-                }
-            }
-            event.setFOV(zoomCount);
-            return;
-        }
-
-        if (ZoomConfig.smoothCamera && isSmoothCameraOn) {
-            setSmoothZoom(false);
-        }
-        if (ZoomConfig.doSlowZoom) {
-            if (zoomCount < event.getFOV()) {
-                zoomCount += ZoomConfig.zoomSpeed;
-                if (zoomCount > event.getFOV()) {
-                    zoomCount = event.getFOV();
-                }
-            }
-            event.setFOV(zoomCount);
-        } else {
-            zoomCount = ZoomConfig.zoomAmount;
-        }
-
-    }
-
-    @Config(modid = SimpleZoom.MOD_ID, name = "../local/client/simplezoom")
-    public static class ZoomConfig {
-
-        @Config.Comment("The Amount that will be zoomed in")
-        public static float zoomAmount = 5.0f;
-        @Config.Comment("Toggle cinematic camera on while zooming")
-        public static boolean smoothCamera = true;
-        @Config.RangeDouble(min = 1.0, max = 2.0)
-        @Config.Comment({"The speed at witch the camera will be zoomed", "doSlowZoom must be in order to work"})
-        public static double zoomSpeed = 1.0;
-        @Config.Comment("Make zooming in more progressive")
-        public static boolean doSlowZoom = false;
-
-    }
-
-
-    private static void setSmoothZoom(boolean smoothOn) {
-        isSmoothCameraOn = smoothOn;
-        Minecraft.getMinecraft().gameSettings.smoothCamera = smoothOn;
     }
 
 
 }
-
-
-
