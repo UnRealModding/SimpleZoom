@@ -1,0 +1,8 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+[[mods]]
+    modId="simplezoom"
+    version="${file.jarVersion}"
+    displayName="Simple Zoom"
+    side="CLIENt"
+    description="Zoom Mods"

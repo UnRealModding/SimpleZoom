@@ -15,32 +15,74 @@ def buildVersion = ENV.BUILD_NUMBER ? "${mod_verison}.${ENV.BUILD_NUMBER}" : "${
 
 version = "${minecraft_version}-" + buildVersion + "-universal"
 
-group = "com.unrealdinnerbone.${mod_name}"
-archivesBaseName = "${mod_name}"
+group = 'com.unrealdinnerbone.simplezoom' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'simplezoom'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-	if(project.hasProperty("devWorkspace")) {
-		version = project.property("minecraftVersion") + "-" + project.property("forgeVersion")
-		mappings = project.property("mappingsVersion")
-	}else {
-		version = "${minecraft_version}-${forge_version}"
-		mappings = "${forge_mappings}"
-	}
-	runDir = "run"
-	replace "@VERSION@", buildVersion
-	replaceIn "${main_class}.java"
+    mappings channel: 'snapshot', version: '20190719-1.14.3'
+  
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+        }
+
+    }
 }
 
-processResources {
-	from(sourceSets.main.resources.srcDirs) {
-		include 'mcmod.info'
-		expand 'version': buildVersion,
-				'mcversion': "${minecraft_version}"
-	}
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
-	}
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.13'
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "simplezoom",
+            "Specification-Vendor": "UnRealDinnerbone",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"UnRealDinnerbone",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+// Example configuration to allow publishing using the maven-publish task
+// we define a custom artifact that is sourced from the reobfJar output task
+// and then declare that to be published
+// Note you'll need to add a repository here
+def reobfFile = file("$buildDir/reobfJar/output.jar")
+def reobfArtifact = artifacts.add('default', reobfFile) {
+    type 'jar'
+    builtBy 'reobfJar'
+}
+
+curseforge {
+    if (project.hasProperty('unreal_curse_api_key')){
+        apiKey = project.getProperty('unreal_curse_api_key')
+    }
+    project {
+        id = "303375"
+        changelog = getGitChangelog
+        changelogType = 'markdown'
+        releaseType = 'release'
+        addGameVersion '1.14.4'
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact reobfArtifact
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
 }
