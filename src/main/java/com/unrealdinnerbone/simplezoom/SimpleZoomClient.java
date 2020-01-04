@@ -20,7 +20,7 @@ public class SimpleZoomClient
 
     public SimpleZoomClient() {
         BINDING = new KeyBinding("Zoom", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_Z, "keygroup.simplezoom");
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new ClientEvents());
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 
     }
@@ -30,10 +30,14 @@ public class SimpleZoomClient
 
     }
 
-    @SubscribeEvent
-    public static void onFovUpdate(FOVUpdateEvent event) {
-        if(BINDING.isKeyDown()) {
-            event.setNewfov(event.getFov() - SimpleZoom.zoomAmount.get());
+    public static class ClientEvents {
+        @SubscribeEvent
+        public void onFovUpdate(FOVUpdateEvent event) {
+            if(BINDING.isKeyDown()) {
+                event.setNewfov(event.getFov() - SimpleZoom.zoomAmount.get());
+            }
         }
     }
+
+
 }
