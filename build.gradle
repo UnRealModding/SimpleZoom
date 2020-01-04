@@ -21,10 +21,12 @@ apply plugin: 'maven-publish'
 apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/generic/markdown-git-changelog.gradle'
 
 
-def ENV = System.getenv()
-def buildVersion = ENV.BUILD_NUMBER ? "2.0.0.${ENV.BUILD_NUMBER}" : "2.0.0.beta"
 
-version = "1.14.3-" + buildVersion + "-universal"
+def ENV = System.getenv()
+def buildNumber = ENV.BUILD_NUMBER ? "${ENV.BUILD_NUMBER}" : "0"
+version = "${mod_version}+build." + buildNumber + ".minecraft." + "${minecraft_version}"
+
+archivesBaseName = "${mod_name}-Forge"
 
 group = 'com.unrealdinnerbone.simplezoom' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'SimpleZoom'
