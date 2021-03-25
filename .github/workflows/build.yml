@@ -11,7 +11,7 @@ on:
       - '**.properties'
       - '**/src/**'
     branches:
-      - "forge-loom"
+      - "master"
 
 jobs:
   build:
