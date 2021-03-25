@@ -10,9 +10,6 @@ on:
       - '**.gradle'
       - '**.properties'
       - '**/src/**'
-    branches:
-      - "master"
-
 jobs:
   build:
     if: |
