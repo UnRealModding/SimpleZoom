@@ -16,8 +16,8 @@ jobs:
       !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.pull_request.title, '[ci skip]')
     strategy:
       matrix:
-        java: [ 1.8, 11, 15 ]
-        os: [ubuntu-20.04, windows-latest]
+        java: [1.8]
+        os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
