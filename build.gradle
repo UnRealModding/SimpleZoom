@@ -1,46 +1,67 @@
-buildscript {
-	repositories {
-		jcenter()
-		maven { url = "https://files.minecraftforge.net/maven" }
-	}
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-	}
+plugins {
+    id 'forgified-fabric-loom' version '0.6.78'
+    id 'maven-publish'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
-
-apply plugin: 'net.minecraftforge.gradle.forge'
-
-def ENV = System.getenv()
-def buildVersion = ENV.BUILD_NUMBER ? "${mod_verison}.${ENV.BUILD_NUMBER}" : "${mod_verison}.beta"
-
-version = "${minecraft_version}-" + buildVersion + "-universal"
-
-group = "com.unrealdinnerbone.${mod_name}"
-archivesBaseName = "${mod_name}"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-minecraft {
-	if(project.hasProperty("devWorkspace")) {
-		version = project.property("minecraftVersion") + "-" + project.property("forgeVersion")
-		mappings = project.property("mappingsVersion")
-	}else {
-		version = "${minecraft_version}-${forge_version}"
-		mappings = "${forge_mappings}"
-	}
-	runDir = "run"
-	replace "@VERSION@", buildVersion
-	replaceIn "${main_class}.java"
+apply from: "https://raw.githubusercontent.com/UnRealDinnerbone/GradleHelpers/master/version.gradle"
+
+archivesBaseName = project.archives_base_name
+group = project.maven_group
+version = getVersionNumber()
+
+loom {
+    silentMojangMappingsLicense()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings minecraft.officialMojangMappings()
+    forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 }
 
 processResources {
-	from(sourceSets.main.resources.srcDirs) {
-		include 'mcmod.info'
-		expand 'version': buildVersion,
-				'mcversion': "${minecraft_version}"
-	}
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
-	}
+    inputs.property "version", project.version
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    def targetVersion = 8
+    if (JavaVersion.current().isJava9Compatible()) {
+        it.options.release = targetVersion
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : project.mod_id,
+                "Specification-Vendor"    : project.mod_author,
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : version,
+                "Implementation-Vendor"   : project.mod_author,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+curseforge {
+    if (System.getenv().get('unreal_curse_api_key')){
+        apiKey = System.getenv().get('unreal_curse_api_key')
+    }
+    project {
+        id = project.property("curseforge_id")
+        changelog = "FixMe"
+        changelogType = 'markdown'
+        releaseType = project.property("type")
+        addGameVersion minecraft_version
+        addGameVersion 'Forge'
+    }
 }

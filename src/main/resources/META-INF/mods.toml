@@ -1,0 +1,16 @@
+modLoader = "javafml"
+loaderVersion = "[36,)"
+license = "All Rights Reserved unless stated otherwise. Distrubtion permssion is given to FeedTheBeast and CurseForge for use in modpacks"
+
+[[mods]]
+modId = "simplezoom"
+version = "${version}"
+displayName = "Simple Zoom"
+description = 'ZOOOOOM!'
+
+[[dependencies.simplezoom]]
+modId = "forge"
+mandatory = true # do you **need** this mod to be able to launch?
+versionRange = "[36,)" # This essentially means any forge >= 36
+ordering = "NONE" # Use this if you want your mod to be loaded specifically BEFORE or AFTER another mod
+side = "BOTH" # Specify where this mod is required: can be BOTH, CLIENT or SERVER
