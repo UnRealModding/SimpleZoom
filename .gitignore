@@ -2,6 +2,7 @@
 /*
 # Included Folders
 !/src
+!/.github
 
 # Included Files
 !.gitignore
