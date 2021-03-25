@@ -1,6 +1,7 @@
 plugins {
     id 'forgified-fabric-loom' version '0.6.78'
     id 'maven-publish'
+    id "architectury-plugin" version "3.0-SNAPSHOT"
     id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
@@ -12,6 +13,12 @@ apply from: "https://raw.githubusercontent.com/UnRealDinnerbone/GradleHelpers/ma
 archivesBaseName = project.archives_base_name
 group = project.maven_group
 version = getVersionNumber()
+
+architectury {
+    minecraft = project.minecraft_version
+    forge()
+    platformSetupLoomIde()
+}
 
 loom {
     silentMojangMappingsLicense()
