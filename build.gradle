@@ -10,7 +10,29 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 apply from: "https://raw.githubusercontent.com/UnRealDinnerbone/GradleHelpers/master/version.gradle"
-apply from: "https://files.latmod.com/public/markdown-git-changelog.gradle"
+//apply from: "https://files.latmod.com/public/markdown-git-changelog.gradle"
+
+
+def getGitChangelog() {
+    try {
+        def stdout = new ByteArrayOutputStream()
+        def gitHash = System.getenv('GIT_COMMIT')
+        println("GIT " + gitHash)
+        def gitPrevHash = System.getenv('GIT_PREVIOUS_COMMIT')
+        println("GIT P " + gitPrevHash)
+        if (gitHash && gitPrevHash) {
+            exec {
+                commandLine 'git', 'log', '--pretty=tformat:- %s - %aN', '' + gitPrevHash + '...' + gitHash
+                standardOutput = stdout
+            }
+            return stdout.toString().trim()
+        } else {
+            return "";
+        }
+    } catch (ignored) {
+        return "";
+    }
+}
 
 println("Cake")
 println(getGitChangelog().toString())
