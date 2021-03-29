@@ -9,6 +9,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 apply from: "https://raw.githubusercontent.com/UnRealDinnerbone/GradleHelpers/master/version.gradle"
+apply from: "https://files.latmod.com/public/markdown-git-changelog.gradle"
 
 archivesBaseName = project.archives_base_name
 group = project.maven_group
@@ -65,7 +66,7 @@ curseforge {
     }
     project {
         id = project.property("curseforge_id")
-        changelog = "FixMe"
+        changelog = getGitChangelog
         changelogType = 'markdown'
         releaseType = project.property("type")
         addGameVersion minecraft_version
