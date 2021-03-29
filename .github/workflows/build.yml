@@ -39,4 +39,4 @@ jobs:
         !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.pull_request.title, '[ci skip]')
       run: |
         chmod +x ./gradlew
-        ./gradlew curseforge
+        ./gradlew build
