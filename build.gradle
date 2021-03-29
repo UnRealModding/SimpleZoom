@@ -13,7 +13,7 @@ apply from: "https://raw.githubusercontent.com/UnRealDinnerbone/GradleHelpers/ma
 apply from: "https://files.latmod.com/public/markdown-git-changelog.gradle"
 
 println("Cake")
-println(getGitChangelog)
+println(getGitChangelog().toString())
 
 archivesBaseName = project.archives_base_name
 group = project.maven_group

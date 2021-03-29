@@ -22,7 +22,7 @@ jobs:
     - name: Build with Gradle
       run: |
         chmod +x gradlew
-        ./gradlew build
+        ./gradlew build --no-daemon
     - uses: actions/upload-artifact@v2
       with:
         name: Artifacts
@@ -52,4 +52,4 @@ jobs:
           !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.pull_request.title, '[ci skip]')
         run: |
           chmod +x ./gradlew
-          ./gradlew build
+          ./gradlew build --no-daemon
