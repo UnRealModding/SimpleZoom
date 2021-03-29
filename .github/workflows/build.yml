@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Release
+      - name: Release Test
         env:
           GIT_COMMIT: ${{ github.event.after }}
           GIT_PREVIOUS_COMMIT: ${{ github.event.before }}
