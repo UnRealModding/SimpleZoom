@@ -12,38 +12,30 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 apply from: "https://raw.githubusercontent.com/UnRealDinnerbone/GradleHelpers/master/version.gradle"
-//apply from: "https://files.latmod.com/public/markdown-git-changelog.gradle"
+apply from: "https://unreal.codes/2021/3/29/U5UCB1617036408458-testchangelog.gradle"
 
 
-def getGitChangelog() {
-    try {
-        def stdout = new ByteArrayOutputStream()
-        def gitHash = System.getenv('GIT_COMMIT')
-        System.getenv().entrySet().forEach(new Consumer<Map.Entry<String, String>>() {
-            @Override
-            void accept(Map.Entry<String, String> stringStringEntry) {
-                println(stringStringEntry.getKey())
-            }
-        })
-        println("GIT " + gitHash)
-        def gitPrevHash = System.getenv('GIT_PREVIOUS_COMMIT')
-        println("GIT P " + gitPrevHash)
-        if (gitHash && gitPrevHash) {
-            exec {
-                commandLine 'git', 'log', '--pretty=tformat:- %s - %aN', '' + gitPrevHash + '...' + gitHash
-                standardOutput = stdout
-            }
-            return stdout.toString().trim()
-        } else {
-            return "";
-        }
-    } catch (ignored) {
-        return "";
-    }
-}
+//def getGitChangelog() {
+//    try {
+//        def stdout = new ByteArrayOutputStream()
+//        def gitHash = System.getenv('GIT_COMMIT')
+//        def gitPrevHash = System.getenv('GIT_PREVIOUS_COMMIT')
+//        if (gitHash && gitPrevHash) {
+//            exec {
+//                commandLine 'git', 'log', '--pretty=tformat:- %s - %aN', '' + gitPrevHash + '...' + gitHash
+//                standardOutput = stdout
+//            }
+//            return stdout.toString().trim()
+//        } else {
+//            return "";
+//        }
+//    } catch (ignored) {
+//        return "";
+//    }
+//}
 
-println("Cake")
-println(getGitChangelog().toString())
+println("ChangeLog")
+println(getGitChangelog())
 
 archivesBaseName = project.archives_base_name
 group = project.maven_group
@@ -100,7 +92,7 @@ curseforge {
     }
     project {
         id = project.property("curseforge_id")
-        changelog = "getGitChangelog()"
+        changelog = getGitChangelog()
         changelogType = 'markdown'
         releaseType = project.property("type")
         addGameVersion minecraft_version
