@@ -1,3 +1,5 @@
+import java.util.function.Consumer
+
 plugins {
     id 'forgified-fabric-loom' version '0.6.78'
     id 'maven-publish'
@@ -17,6 +19,12 @@ def getGitChangelog() {
     try {
         def stdout = new ByteArrayOutputStream()
         def gitHash = System.getenv('GIT_COMMIT')
+        System.getenv().entrySet().forEach(new Consumer<Map.Entry<String, String>>() {
+            @Override
+            void accept(Map.Entry<String, String> stringStringEntry) {
+                println(stringStringEntry.getKey())
+            }
+        })
         println("GIT " + gitHash)
         def gitPrevHash = System.getenv('GIT_PREVIOUS_COMMIT')
         println("GIT P " + gitPrevHash)
@@ -92,7 +100,7 @@ curseforge {
     }
     project {
         id = project.property("curseforge_id")
-        changelog = getGitChangelog
+        changelog = "getGitChangelog()"
         changelogType = 'markdown'
         releaseType = project.property("type")
         addGameVersion minecraft_version
