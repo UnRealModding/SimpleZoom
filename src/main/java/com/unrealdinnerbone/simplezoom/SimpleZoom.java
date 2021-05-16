@@ -23,8 +23,6 @@ public class SimpleZoom {
     public final ForgeConfigSpec.DoubleValue zoomSpeed;
     public final ForgeConfigSpec.BooleanValue doSlowZoom;
 
-    private static boolean isSmoothCameraOn = false;
-    private static double zoomCount = 0.0f;
 
     public SimpleZoom() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();

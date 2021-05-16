@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.lwjgl.glfw.GLFW;
 
+import java.nio.file.Paths;
+
 @Mod(SimpleZoomClient.MOD_ID)
 public class SimpleZoomClient {
 
