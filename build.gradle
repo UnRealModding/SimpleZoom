@@ -70,5 +70,6 @@ curseforge {
         releaseType = project.property("type")
         addGameVersion minecraft_version
         addGameVersion 'Forge'
+        mainArtifact jar
     }
 }
