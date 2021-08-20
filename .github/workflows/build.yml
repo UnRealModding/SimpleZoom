@@ -1,33 +1,12 @@
-name: Java CI
+name: Build & Release
 
-on: [push]
+on:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/cache@v2
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-    - uses: actions/checkout@v1
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Build with Gradle
-      run: |
-        chmod +x gradlew
-        ./gradlew build --no-daemon
-    - uses: actions/upload-artifact@v2
-      with:
-        name: Artifacts
-        path: build/libs/
-  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/cache@v2
@@ -38,18 +17,19 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 30 # Gets the last 30 commits so the changelog might work
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Release Test
+      - name: Build & release to curseforge
         env:
           GIT_COMMIT: ${{ github.event.after }}
           GIT_PREVIOUS_COMMIT: ${{ github.event.before }}
-          unreal_curse_api_key: ${{ secrets.UNREAL_CURSE_API_KEY }}
-        if: |
-          !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.pull_request.title, '[ci skip]')
+          #     NANITE_DEPLOY: ${{ secrets.NANITE_DEPLOY  }}
+          CURSE_DEPLOY: ${{ secrets.CURSE_DEPLOY }}
         run: |
           chmod +x ./gradlew
-          ./gradlew build curseforge --no-daemon
+          ./gradlew build curseforge --stacktrace --no-daemon

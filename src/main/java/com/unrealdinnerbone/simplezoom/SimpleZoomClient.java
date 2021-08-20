@@ -15,10 +15,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.nio.file.Paths;
 
-@Mod(SimpleZoomClient.MOD_ID)
 public class SimpleZoomClient {
-
-    public static final String MOD_ID = "simplezoom";
 
     private final SimpleZoom simpleZoom;
     private final KeyMapping zoomBind;
@@ -28,7 +25,7 @@ public class SimpleZoomClient {
 
     public SimpleZoomClient(SimpleZoom simpleZoom) {
         this.simpleZoom = simpleZoom;
-        zoomBind = new KeyMapping(MOD_ID + "." + "zoom", GLFW.GLFW_KEY_Z, MOD_ID + "." + "zoom");
+        zoomBind = new KeyMapping(SimpleZoom.MOD_ID + "." + "zoom", GLFW.GLFW_KEY_Z, SimpleZoom.MOD_ID + "." + "zoom");
         ClientRegistry.registerKeyBinding(zoomBind);
         MinecraftForge.EVENT_BUS.addListener(this::onFOVModifierEvent);
     }
